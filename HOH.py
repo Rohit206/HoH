@@ -6,62 +6,44 @@ data.head()
 
 data.isnull().sum()
 
-data.dtypes
+data.rename(columns = {"typeofsociety" : "TypeofSociety"}, inplace = True)                      
 
-data.describe()
+df = data[["BookingDate", "TypeofSociety"]]
 
-data.typeofsociety.fillna(method = "ffill",limit = 10, inplace = True)
+df.head()
 
-data.BookingDate.fillna(method = "bfill",limit = 10, inplace = True)
+df.TypeofSociety.fillna(method = "ffill",limit = 5, inplace = True)
 
-data.BookingDate.fillna(method = "ffill",limit = 10, inplace = True)
+df.TypeofSociety.fillna(method = "bfill",limit = 5, inplace = True)
 
-data.rename(columns = {"Booking Completed" : "BookingCompleted", "apartment name" : "apartmentname"}, inplace = True)                      
+df.BookingDate.fillna(method = "bfill",limit = 5, inplace = True)
 
-data.BookingCompleted.fillna("No", inplace = True)
+df.BookingDate.fillna(method = "ffill",limit = 5, inplace = True)
 
-data.BookingCompleted.value_counts()
-
-data['typeofsociety'].value_counts(normalize=True).plot(figsize=(10,8),kind='bar',color='green')
-
-data['BookingDate'].value_counts(normalize=True).plot(figsize=(10,12),kind='bar',color='yellow')
-
-date = data.groupby(['BookingDate','typeofsociety']).size().unstack().plot.bar().figsize=(20,15)
-
-import seaborn as sns
-
-sns.pairplot(data, hue = "BookingDate")
-
+df.isnull().sum()
 
 from sklearn.preprocessing import LabelEncoder
 
 le = LabelEncoder()
 
-data.typeofsociety = le.fit_transform(df.typeofsociety)
+df.TypeofSociety = le.fit_transform(df.TypeofSociety)
 
-data.dtypes
+df.head()
 
-data.isnull().sum()
+import matplotlib.pyplot as plt
 
-data.head()
+df.plot()
 
-data[["BookingDate", "typeofsociety"]]
+plt.ylabel("Type of society")
+                                                    
 
-data.set_index('BookingDate',inplace=True)
+df.set_index('BookingDate',inplace=True)
 
-data.head()
-
-df1 = data.iloc [:, [1]] 
+df1 = df.iloc [:, [1]] 
 df1
 
 df1.head()
 
-import matplotlib.pyplot as plt
-
-df1.plot()
-
-plt.ylabel("Type of society")
-                                                    
 data.apartmentname = le.fit_transform(data.apartmentname)
 
 data.typeofsociety = le.fit_transform(data.typeofsociety)
@@ -96,3 +78,8 @@ sns.pairplot(data, hue = "BookingDate")
 
 sns.pairplot(data, hue = "BookingCompleted")
 
+data['typeofsociety'].value_counts(normalize=True).plot(figsize=(10,8),kind='bar',color='green')
+
+data['BookingDate'].value_counts(normalize=True).plot(figsize=(10,12),kind='bar',color='yellow')
+
+date = data.groupby(['BookingDate','typeofsociety']).size().unstack().plot.bar().figsize=(20,15)
